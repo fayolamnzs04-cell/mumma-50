@@ -25,5 +25,22 @@ export const SITE = {
 
 export const asset = (path) => `${BASE}/assets/${path}`;
 
+// Photos may be saved as .jpg, .jpeg, .png (any letter case). The site tries each in turn.
+const EXTENSIONS = ['.jpg', '.jpeg', '.JPG', '.JPEG', '.png', '.PNG'];
+export const photoCandidates = (path) => {
+  const stem = path.replace(/\.(jpe?g|png)$/i, '');
+  return EXTENSIONS.map((ext) => asset(stem + ext));
+};
+
+// Loads the first candidate that exists, then calls done(url). Used for the heart tiles + portrait.
+export function loadPhoto(path, done) {
+  const urls = photoCandidates(path);
+  let i = 0;
+  const img = new Image();
+  img.onload = () => done(img.src);
+  img.onerror = () => { i += 1; if (i < urls.length) img.src = urls[i]; };
+  img.src = urls[0];
+}
+
 export const familyPhoto = (n) =>
   `photos/08-family/family-${String(((n - 1) % SITE.familyPhotoCount) + 1).padStart(2, '0')}.jpg`;

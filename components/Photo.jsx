@@ -1,23 +1,25 @@
 'use client';
-// A photograph slot. Shows the real photo from public/assets/<file> when it exists;
-// otherwise shows a labelled placeholder saying exactly which file belongs here.
+// A photograph slot. Shows the real photo from public/assets/<file> when it exists
+// (as .jpg, .jpeg or .png); otherwise shows a labelled placeholder saying which file belongs here.
 import { useEffect, useRef, useState } from 'react';
-import { asset } from '../config/site';
+import { photoCandidates } from '../config/site';
 
 export default function Photo({ file, label, dark = false, style, children }) {
+  const urls = photoCandidates(file);
   const img = useRef(null);
-  const [missing, setMissing] = useState(false);
+  const [i, setI] = useState(0);
+  const tryNext = () => setI((n) => n + 1);
 
   useEffect(() => {
-    // the image may have failed before React attached its error handler
+    // the first image may have failed before React attached its error handler
     const el = img.current;
-    if (el && el.complete && el.naturalWidth === 0) setMissing(true);
+    if (el && el.complete && el.naturalWidth === 0) tryNext();
   }, []);
 
   return (
     <div className={'ph' + (dark ? ' dark' : '')} data-label={label} data-file={'public/assets/' + file} style={style}>
-      {!missing && (
-        <img ref={img} src={asset(file)} alt={label} loading="lazy" decoding="async" onError={() => setMissing(true)} />
+      {i < urls.length && (
+        <img key={urls[i]} ref={img} src={urls[i]} alt={label} loading="lazy" decoding="async" onError={tryNext} />
       )}
       {children}
     </div>
