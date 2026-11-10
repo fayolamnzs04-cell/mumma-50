@@ -77,9 +77,8 @@ export default function VideoPlayer() {
       ) : (
         <video
           ref={video}
-          src={/^https?:/.test(SITE.video) ? SITE.video : asset(SITE.video)}
-          poster={asset(SITE.videoPoster)}
-          preload="metadata"
+          src={(/^https?:/.test(SITE.video) ? SITE.video : asset(SITE.video)) + '#t=0.1'}
+          preload="auto"
           controls={started}
           onError={() => setMissing(true)}
           onPlay={() => music.duck(0)}
