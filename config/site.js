@@ -12,7 +12,7 @@ export const SITE = {
 
   // The family birthday video (Chapter 11). If missing, an 8-second stand-in plays.
   // Can also be a full https:// link to an .mp4 hosted elsewhere.
-  video: 'video/family-wishes.mp4',
+  video: 'video/family-wishes.MP4',
   videoPoster: 'video/family-wishes-poster.jpg',
 
   // Chapter 9: this portrait is cut into the tiles that drift together beside the letter.
